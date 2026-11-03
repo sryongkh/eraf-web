@@ -32,7 +32,7 @@ if (window.gsap && window.ScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger);
   gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
     gsap.from(".hero-content", { opacity: 0, y: 24, duration: 0.85 });
-    gsap.utils.toArray(".columns").forEach((series) => {
+    gsap.utils.toArray(".series-preview a").forEach((series) => {
       gsap.from(series, {
         y: 24,
         duration: 0.65,
