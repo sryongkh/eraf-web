@@ -1,103 +1,43 @@
-gsap.registerPlugin(ScrollTrigger);
-ScrollTrigger.defaults({
-  toggleActions: "play none none reverse",
+const video = document.querySelector(".hero-video");
+const toggle = document.querySelector(".video-toggle");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+function updateVideoControl() {
+  toggle.textContent = video.paused ? "Play background video" : "Pause background video";
+}
+
+function playVideo() {
+  video.play().catch(updateVideoControl);
+}
+
+toggle.hidden = false;
+toggle.addEventListener("click", () => {
+  if (video.paused) {
+    playVideo();
+  } else {
+    video.pause();
+  }
 });
-gsap.to(".img-container", {
-  scale: 52,
-  ease: "ease",
-  scrollTrigger: {
-    trigger: ".video-section",
-    scrub: 1,
-    start: "top top",
-    end: "bottom",
-    pin: true,
-  },
+video.addEventListener("play", updateVideoControl);
+video.addEventListener("pause", updateVideoControl);
+video.addEventListener("error", () => {
+  toggle.hidden = true;
 });
-gsap.to(".right", {
-  autoAlpha: 0,
-  x: 200,
-  duration: 1.5,
-  scrollTrigger: {
-    start: 1,
-  },
+reducedMotion.addEventListener("change", (event) => {
+  if (event.matches) video.pause();
 });
-gsap.to(".left", {
-  autoAlpha: 0,
-  x: -200,
-  duration: 1.5,
-  scrollTrigger: {
-    start: 1,
-  },
-});
-gsap.to(".txt-bottom", {
-  autoAlpha: 0,
-  letterSpacing: -10,
-  duration: 2,
-  scrollTrigger: {
-    start: 2,
-  },
-});
-const tl = gsap.timeline();
-tl.from(".left-side div", {
-  y: 150,
-  opacity: 0,
-  stagger: {
-    amount: 0.4,
-  },
-  delay: 0.5,
-})
-  .from(
-    ".right-side",
-    {
-      opacity: 0,
-      duration: 2,
-    },
-    0.5
-  )
-  .to(".wrapper", {
-    x: -window.innerWidth,
+if (!reducedMotion.matches) playVideo();
+
+if (window.gsap && window.ScrollTrigger) {
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", () => {
+    gsap.from(".hero-content", { opacity: 0, y: 24, duration: 0.85 });
+    gsap.utils.toArray(".columns").forEach((series) => {
+      gsap.from(series, {
+        y: 24,
+        duration: 0.65,
+        scrollTrigger: { trigger: series, start: "top 92%", once: true },
+      });
+    });
   });
-ScrollTrigger.create({
-  animation: tl,
-  trigger: ".wrapper",
-  start: "top top",
-  end: "+=600",
-  scrub: 1,
-  pin: true,
-  ease: "ease",
-});
-const timeline = gsap.timeline();
-timeline
-  .from(".title span", {
-    y: 80,
-    skewY: 7,
-    duration: 3,
-  })
-  .from(".txt-bottom", {
-    letterSpacing: -10,
-    opacity: 0,
-    duration: 3,
-    scrollTrigger: {
-      start: 2,
-    },
-  });
-gsap.utils.toArray(".col").forEach((image) => {
-  gsap.fromTo(
-    image,
-    {
-      opacity: 0.3,
-      x: 0,
-    },
-    {
-      opacity: 1,
-      x: -50,
-      scrollTrigger: {
-        trigger: image,
-        start: "0%",
-        stagger: {
-          amount: 0.4,
-        },
-      },
-    }
-  );
-});
+}
