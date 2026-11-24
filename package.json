@@ -1,0 +1,14 @@
+{
+  "name": "eraf-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Editorial photography portfolio with progressively enhanced GSAP motion.",
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "dev": "npm run build && node scripts/serve.cjs",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.1"
+  }
+}

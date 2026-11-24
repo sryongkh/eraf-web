@@ -3,7 +3,8 @@ const video = document.querySelector(".video-section video");
 if (window.gsap && window.ScrollTrigger) {
   gsap.registerPlugin(ScrollTrigger);
   gsap.matchMedia().add("(min-width: 75rem) and (prefers-reduced-motion: no-preference)", () => {
-    video.play().catch(() => {});
+    document.documentElement.classList.add("motion-ready");
+    video?.play().catch(() => {});
     ScrollTrigger.defaults({
       toggleActions: "play none none reverse",
     });
@@ -107,6 +108,9 @@ if (window.gsap && window.ScrollTrigger) {
         }
       );
     });
-    return () => video.pause();
+    return () => {
+      video?.pause();
+      document.documentElement.classList.remove("motion-ready");
+    };
   });
 }
